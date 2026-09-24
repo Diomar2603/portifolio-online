@@ -1,0 +1,32 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+coverage/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+
+# Ambiente
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+
+# SO / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

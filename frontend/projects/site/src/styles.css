@@ -1,0 +1,35 @@
+@import 'tailwindcss';
+
+/* Paleta e tipografia do escopo (seção 9) */
+@theme {
+  --color-sand: #f4efe6;
+  --color-moss: #3f5e4b;
+  --color-coral: #ff7a59;
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-sand);
+    color: #1f2a24;
+    font-family: var(--font-sans);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html {
+      background-color: #141a16;
+      color: #e8e3d9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}

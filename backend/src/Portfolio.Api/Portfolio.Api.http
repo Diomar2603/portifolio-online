@@ -1,0 +1,7 @@
+@api = http://localhost:5080
+
+GET {{api}}/health
+
+###
+# Em produção, as rotas /api/admin exigem o header Cf-Access-Jwt-Assertion (Cloudflare Access)
+GET {{api}}/api/admin/categories

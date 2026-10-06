@@ -9,7 +9,7 @@ Escopo técnico e backlog: Notion — "Portfólio Dinâmico — Escopo Técnico"
 ```
 portifolio-online/
 ├── .github/workflows/   # CI/CD: api (build → GHCR → Azure Container Apps), site (prerender → Cloudflare Pages), backup noturno pg_dump → R2
-├── docs/adr/            # Registros de decisão de arquitetura
+├── docs/                # arquitetura.drawio (arquitetura, fluxos, modelo de dados) + adr/
 ├── frontend/            # Workspace Angular 20+ (multi-projeto)
 │   └── projects/
 │       ├── site/        # Landing pública (SSG/prerender) — home, projetos, detalhe

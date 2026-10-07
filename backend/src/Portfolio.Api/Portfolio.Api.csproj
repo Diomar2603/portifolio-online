@@ -2,12 +2,15 @@
   <PropertyGroup>
     <UserSecretsId>portfolio-api</UserSecretsId>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- Lambda (runtime dotnet10, arm64): ReadyToRun reduz o cold start -->
+    <AWSProjectType>Lambda</AWSProjectType>
     <PublishReadyToRun>true</PublishReadyToRun>
-    <ContainerRepository>portfolio-api</ContainerRepository>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>

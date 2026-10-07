@@ -1,0 +1,893 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-07T02:40:00.000Z",
+  "__export_source": "claude",
+  "resources": [
+    {
+      "_id": "wrk_portfolio",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Portfólio Online API",
+      "description": "Endpoints do backend Portfolio.Api (Minimal API .NET 10). Gerado a partir do código em backend/src/Portfolio.Api/Endpoints.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_portfolio",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:5080",
+        "token": "",
+        "category_id": "00000000-0000-0000-0000-000000000000",
+        "project_id": "00000000-0000-0000-0000-000000000000",
+        "media_id": "00000000-0000-0000-0000-000000000000",
+        "education_id": "00000000-0000-0000-0000-000000000000",
+        "experience_id": "00000000-0000-0000-0000-000000000000",
+        "certification_id": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    {
+      "_id": "env_local",
+      "_type": "environment",
+      "parentId": "env_base",
+      "name": "Local (DevBypass)",
+      "color": "#2e7d32",
+      "data": {
+        "base_url": "http://localhost:5080",
+        "token": ""
+      }
+    },
+    {
+      "_id": "env_prod",
+      "_type": "environment",
+      "parentId": "env_base",
+      "name": "Produção (API Gateway)",
+      "color": "#c62828",
+      "data": {
+        "base_url": "https://SEU-API-ID.execute-api.REGIAO.amazonaws.com",
+        "token": "COLE_AQUI_O_ACCESS_TOKEN_DO_COGNITO"
+      }
+    },
+    {
+      "_id": "req_001",
+      "_type": "request",
+      "parentId": "wrk_portfolio",
+      "name": "Health",
+      "method": "GET",
+      "url": "{{ _.base_url }}/health",
+      "description": "Público. Retorna { status: 'ok' }.",
+      "metaSortKey": -999,
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "body": {}
+    },
+    {
+      "_id": "fld_profile",
+      "_type": "request_group",
+      "parentId": "wrk_portfolio",
+      "name": "Perfil",
+      "description": ""
+    },
+    {
+      "_id": "req_002",
+      "_type": "request",
+      "parentId": "fld_profile",
+      "name": "Obter perfil",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/profile",
+      "description": "200 com o perfil ou 204 se ainda não existe.",
+      "metaSortKey": -998,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_003",
+      "_type": "request",
+      "parentId": "fld_profile",
+      "name": "Salvar perfil (upsert)",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/api/admin/profile",
+      "description": "name obrigatório (máx. 120); headline máx. 200.",
+      "metaSortKey": -997,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Leandro Diomar Gomes da Silva\",\n  \"headline\": \"Engenheiro de Software\",\n  \"bio\": \"Texto de apresentação.\",\n  \"links\": {\n    \"github\": \"https://github.com/usuario\",\n    \"linkedin\": \"https://www.linkedin.com/in/usuario\"\n  },\n  \"avatarMediaId\": null\n}"
+      }
+    },
+    {
+      "_id": "fld_edu",
+      "_type": "request_group",
+      "parentId": "wrk_portfolio",
+      "name": "Formação",
+      "description": ""
+    },
+    {
+      "_id": "req_004",
+      "_type": "request",
+      "parentId": "fld_edu",
+      "name": "Listar",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/education",
+      "description": "",
+      "metaSortKey": -996,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_005",
+      "_type": "request",
+      "parentId": "fld_edu",
+      "name": "Obter por id",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/education/{{ _.education_id }}",
+      "description": "",
+      "metaSortKey": -995,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_006",
+      "_type": "request",
+      "parentId": "fld_edu",
+      "name": "Criar",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/education",
+      "description": "institution e course obrigatórios; endDate >= startDate (datas yyyy-MM-dd).",
+      "metaSortKey": -994,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"institution\": \"UFABC\",\n  \"course\": \"Bacharelado em Ciência da Computação\",\n  \"startDate\": \"2020-02-01\",\n  \"endDate\": null,\n  \"description\": \"\",\n  \"order\": 0\n}"
+      }
+    },
+    {
+      "_id": "req_007",
+      "_type": "request",
+      "parentId": "fld_edu",
+      "name": "Atualizar",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/api/admin/education/{{ _.education_id }}",
+      "description": "institution e course obrigatórios; endDate >= startDate (datas yyyy-MM-dd).",
+      "metaSortKey": -993,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"institution\": \"UFABC\",\n  \"course\": \"Bacharelado em Ciência da Computação\",\n  \"startDate\": \"2020-02-01\",\n  \"endDate\": null,\n  \"description\": \"\",\n  \"order\": 0\n}"
+      }
+    },
+    {
+      "_id": "req_008",
+      "_type": "request",
+      "parentId": "fld_edu",
+      "name": "Excluir",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/admin/education/{{ _.education_id }}",
+      "description": "",
+      "metaSortKey": -992,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "fld_exp",
+      "_type": "request_group",
+      "parentId": "wrk_portfolio",
+      "name": "Experiência",
+      "description": ""
+    },
+    {
+      "_id": "req_009",
+      "_type": "request",
+      "parentId": "fld_exp",
+      "name": "Listar",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/experience",
+      "description": "",
+      "metaSortKey": -991,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_010",
+      "_type": "request",
+      "parentId": "fld_exp",
+      "name": "Obter por id",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/experience/{{ _.experience_id }}",
+      "description": "",
+      "metaSortKey": -990,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_011",
+      "_type": "request",
+      "parentId": "fld_exp",
+      "name": "Criar",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/experience",
+      "description": "company e role obrigatórios; endDate >= startDate.",
+      "metaSortKey": -989,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"company\": \"Empresa\",\n  \"role\": \"Engenheiro de Software\",\n  \"startDate\": \"2024-01-01\",\n  \"endDate\": null,\n  \"description\": \"\",\n  \"order\": 0\n}"
+      }
+    },
+    {
+      "_id": "req_012",
+      "_type": "request",
+      "parentId": "fld_exp",
+      "name": "Atualizar",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/api/admin/experience/{{ _.experience_id }}",
+      "description": "company e role obrigatórios; endDate >= startDate.",
+      "metaSortKey": -988,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"company\": \"Empresa\",\n  \"role\": \"Engenheiro de Software\",\n  \"startDate\": \"2024-01-01\",\n  \"endDate\": null,\n  \"description\": \"\",\n  \"order\": 0\n}"
+      }
+    },
+    {
+      "_id": "req_013",
+      "_type": "request",
+      "parentId": "fld_exp",
+      "name": "Excluir",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/admin/experience/{{ _.experience_id }}",
+      "description": "",
+      "metaSortKey": -987,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "fld_cert",
+      "_type": "request_group",
+      "parentId": "wrk_portfolio",
+      "name": "Certificações",
+      "description": ""
+    },
+    {
+      "_id": "req_014",
+      "_type": "request",
+      "parentId": "fld_cert",
+      "name": "Listar",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/certifications",
+      "description": "",
+      "metaSortKey": -986,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_015",
+      "_type": "request",
+      "parentId": "fld_cert",
+      "name": "Obter por id",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/certifications/{{ _.certification_id }}",
+      "description": "",
+      "metaSortKey": -985,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_016",
+      "_type": "request",
+      "parentId": "fld_cert",
+      "name": "Criar",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/certifications",
+      "description": "name e issuer obrigatórios; credentialUrl deve ser URL absoluta.",
+      "metaSortKey": -984,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"AWS Certified AI Practitioner\",\n  \"issuer\": \"Amazon Web Services\",\n  \"issuedAt\": \"2026-01-01\",\n  \"credentialUrl\": \"https://www.credly.com/badges/exemplo\",\n  \"badgeMediaId\": null,\n  \"order\": 0\n}"
+      }
+    },
+    {
+      "_id": "req_017",
+      "_type": "request",
+      "parentId": "fld_cert",
+      "name": "Atualizar",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/api/admin/certifications/{{ _.certification_id }}",
+      "description": "name e issuer obrigatórios; credentialUrl deve ser URL absoluta.",
+      "metaSortKey": -983,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"AWS Certified AI Practitioner\",\n  \"issuer\": \"Amazon Web Services\",\n  \"issuedAt\": \"2026-01-01\",\n  \"credentialUrl\": \"https://www.credly.com/badges/exemplo\",\n  \"badgeMediaId\": null,\n  \"order\": 0\n}"
+      }
+    },
+    {
+      "_id": "req_018",
+      "_type": "request",
+      "parentId": "fld_cert",
+      "name": "Excluir",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/admin/certifications/{{ _.certification_id }}",
+      "description": "",
+      "metaSortKey": -982,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "fld_cat",
+      "_type": "request_group",
+      "parentId": "wrk_portfolio",
+      "name": "Categorias",
+      "description": ""
+    },
+    {
+      "_id": "req_019",
+      "_type": "request",
+      "parentId": "fld_cat",
+      "name": "Listar (plana)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/categories",
+      "description": "Lista plana ordenada por ParentId/Order; o front monta a árvore.",
+      "metaSortKey": -981,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_020",
+      "_type": "request",
+      "parentId": "fld_cat",
+      "name": "Criar",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/categories",
+      "description": "name obrigatório (máx. 80); slug ^[a-z0-9-]+$.",
+      "metaSortKey": -980,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"parentId\": null,\n  \"name\": \"Backend\",\n  \"slug\": \"backend\",\n  \"order\": 0,\n  \"icon\": null,\n  \"color\": null\n}"
+      }
+    },
+    {
+      "_id": "req_021",
+      "_type": "request",
+      "parentId": "fld_cat",
+      "name": "Atualizar",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/api/admin/categories/{{ _.category_id }}",
+      "description": "409 se tentar mover a categoria para dentro dela mesma ou de uma subcategoria.",
+      "metaSortKey": -979,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"parentId\": null,\n  \"name\": \"Backend\",\n  \"slug\": \"backend\",\n  \"order\": 0,\n  \"icon\": null,\n  \"color\": null\n}"
+      }
+    },
+    {
+      "_id": "req_022",
+      "_type": "request",
+      "parentId": "fld_cat",
+      "name": "Reordenar",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/api/admin/categories/reorder",
+      "description": "Atualiza parentId e order em lote. 204.",
+      "metaSortKey": -978,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "[\n  {\n    \"id\": \"{{ _.category_id }}\",\n    \"parentId\": null,\n    \"order\": 0\n  }\n]"
+      }
+    },
+    {
+      "_id": "req_023",
+      "_type": "request",
+      "parentId": "fld_cat",
+      "name": "Excluir",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/admin/categories/{{ _.category_id }}",
+      "description": "409 se tiver subcategorias ou projetos.",
+      "metaSortKey": -977,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "fld_proj",
+      "_type": "request_group",
+      "parentId": "wrk_portfolio",
+      "name": "Projetos",
+      "description": ""
+    },
+    {
+      "_id": "req_024",
+      "_type": "request",
+      "parentId": "fld_proj",
+      "name": "Listar",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/projects",
+      "description": "",
+      "metaSortKey": -976,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_025",
+      "_type": "request",
+      "parentId": "fld_proj",
+      "name": "Obter por id",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/projects/{{ _.project_id }}",
+      "description": "Inclui repos, tags e galeria.",
+      "metaSortKey": -975,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_026",
+      "_type": "request",
+      "parentId": "fld_proj",
+      "name": "Criar",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/projects",
+      "description": "title obrigatório (máx. 160); slug ^[a-z0-9-]+$; status draft|published; URLs dos repos absolutas. Tags são criadas/reaproveitadas pelo slug.",
+      "metaSortKey": -974,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"categoryId\": \"{{ _.category_id }}\",\n  \"title\": \"Portfólio Online\",\n  \"slug\": \"portfolio-online\",\n  \"summary\": \"Currículo online com painel admin.\",\n  \"content\": \"# Conteúdo em Markdown\",\n  \"featured\": true,\n  \"status\": \"draft\",\n  \"coverMediaId\": null,\n  \"repos\": [\n    {\n      \"url\": \"https://github.com/usuario/portifolio-online\",\n      \"language\": \"C#\",\n      \"order\": 0\n    }\n  ],\n  \"tags\": [\n    \".NET\",\n    \"Angular\",\n    \"AWS\"\n  ],\n  \"gallery\": []\n}"
+      }
+    },
+    {
+      "_id": "req_027",
+      "_type": "request",
+      "parentId": "fld_proj",
+      "name": "Atualizar",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/api/admin/projects/{{ _.project_id }}",
+      "description": "",
+      "metaSortKey": -973,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"categoryId\": \"{{ _.category_id }}\",\n  \"title\": \"Portfólio Online\",\n  \"slug\": \"portfolio-online\",\n  \"summary\": \"Currículo online com painel admin.\",\n  \"content\": \"# Conteúdo em Markdown\",\n  \"featured\": true,\n  \"status\": \"draft\",\n  \"coverMediaId\": null,\n  \"repos\": [\n    {\n      \"url\": \"https://github.com/usuario/portifolio-online\",\n      \"language\": \"C#\",\n      \"order\": 0\n    }\n  ],\n  \"tags\": [\n    \".NET\",\n    \"Angular\",\n    \"AWS\"\n  ],\n  \"gallery\": []\n}"
+      }
+    },
+    {
+      "_id": "req_028",
+      "_type": "request",
+      "parentId": "fld_proj",
+      "name": "Excluir",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/admin/projects/{{ _.project_id }}",
+      "description": "",
+      "metaSortKey": -972,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "fld_media",
+      "_type": "request_group",
+      "parentId": "wrk_portfolio",
+      "name": "Mídia",
+      "description": "Upload em 3 passos: (1) POST /media devolve URLs pré-assinadas → (2) PUT do .webp direto na URL do S3 (fora da API) → (3) POST /media/{id}/confirm."
+    },
+    {
+      "_id": "req_029",
+      "_type": "request",
+      "parentId": "fld_media",
+      "name": "Listar",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/media",
+      "description": "Só mídias prontas. search filtra pelo alt; unused=true lista as não referenciadas.",
+      "metaSortKey": -971,
+      "headers": [],
+      "parameters": [
+        {
+          "name": "search",
+          "value": "",
+          "disabled": true
+        },
+        {
+          "name": "unused",
+          "value": "true",
+          "disabled": true
+        }
+      ],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_030",
+      "_type": "request",
+      "parentId": "fld_media",
+      "name": "1. Criar (URLs pré-assinadas)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/media",
+      "description": "sha256 com 64 caracteres; alt obrigatório; largura das variantes 1–4096. Se o hash já existir, retorna duplicate=true e reaproveita.",
+      "metaSortKey": -970,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"sha256\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n  \"width\": 1600,\n  \"height\": 900,\n  \"alt\": \"Descrição da imagem\",\n  \"variants\": [\n    {\n      \"width\": 480,\n      \"bytes\": 20000\n    },\n    {\n      \"width\": 960,\n      \"bytes\": 60000\n    },\n    {\n      \"width\": 1600,\n      \"bytes\": 120000\n    }\n  ]\n}"
+      }
+    },
+    {
+      "_id": "req_031",
+      "_type": "request",
+      "parentId": "fld_media",
+      "name": "3. Confirmar upload",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/media/{{ _.media_id }}/confirm",
+      "description": "409 se alguma variante não estiver no S3.",
+      "metaSortKey": -969,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_032",
+      "_type": "request",
+      "parentId": "fld_media",
+      "name": "Atualizar alt",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/api/admin/media/{{ _.media_id }}",
+      "description": "",
+      "metaSortKey": -968,
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"alt\": \"Novo texto alternativo\"\n}"
+      }
+    },
+    {
+      "_id": "req_033",
+      "_type": "request",
+      "parentId": "fld_media",
+      "name": "Excluir",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/admin/media/{{ _.media_id }}",
+      "description": "409 se a imagem estiver em uso.",
+      "metaSortKey": -967,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "fld_pub",
+      "_type": "request_group",
+      "parentId": "wrk_portfolio",
+      "name": "Publicação",
+      "description": ""
+    },
+    {
+      "_id": "req_034",
+      "_type": "request",
+      "parentId": "fld_pub",
+      "name": "Pré-visualizar snapshot",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/admin/snapshot",
+      "description": "Mostra o JSON que será publicado.",
+      "metaSortKey": -966,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    },
+    {
+      "_id": "req_035",
+      "_type": "request",
+      "parentId": "fld_pub",
+      "name": "Publicar site",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/admin/publish",
+      "description": "Grava snapshot.json no S3 e dispara o deploy do site. 202.",
+      "metaSortKey": -965,
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}",
+        "prefix": "Bearer",
+        "disabled": false
+      },
+      "body": {}
+    }
+  ]
+}

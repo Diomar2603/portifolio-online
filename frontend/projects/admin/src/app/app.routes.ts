@@ -1,10 +1,14 @@
 import { Routes } from '@angular/router';
+import { AuthCallback } from './core/auth/auth-callback';
+import { authGuard } from './core/auth/auth.guard';
 import { Shell } from './layout/shell';
 
 export const routes: Routes = [
+  { path: 'auth/callback', component: AuthCallback },
   {
     path: '',
     component: Shell,
+    canActivate: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'projetos' },
       { path: 'perfil', title: 'Perfil', loadComponent: () => import('./features/profile/profile.page').then((m) => m.ProfilePage) },

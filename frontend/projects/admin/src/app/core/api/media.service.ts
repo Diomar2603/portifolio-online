@@ -10,7 +10,7 @@ interface UploadTicket {
 }
 
 /**
- * Fluxo: processa no navegador → pede URLs pré-assinadas → PUT direto no R2 → confirma.
+ * Fluxo: processa no navegador → pede URLs pré-assinadas → PUT direto no S3 → confirma.
  * TODO: mover processImage para um Web Worker.
  */
 @Injectable({ providedIn: 'root' })

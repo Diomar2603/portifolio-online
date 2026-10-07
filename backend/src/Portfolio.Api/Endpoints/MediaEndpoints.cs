@@ -9,7 +9,7 @@ using Portfolio.Infrastructure.Storage;
 namespace Portfolio.Api.Endpoints;
 
 /// <summary>
-/// Upload direto ao R2: (1) POST devolve URLs pré-assinadas → (2) front faz PUT no R2 → (3) POST /confirm.
+/// Upload direto ao S3: (1) POST devolve URLs pré-assinadas → (2) front faz PUT no S3 → (3) POST /confirm.
 /// </summary>
 public static class MediaEndpoints
 {
@@ -59,8 +59,8 @@ public static class MediaEndpoints
             if (await db.Media.FindAsync([id], ct) is not { } media) return Results.NotFound();
 
             foreach (var width in media.Variants)
-                if (!await storage.ExistsAsync(R2MediaStorage.ObjectKey(media.Key, width), ct))
-                    return Results.Problem($"Variante {width}px não encontrada no R2.", statusCode: 409);
+                if (!await storage.ExistsAsync(S3MediaStorage.ObjectKey(media.Key, width), ct))
+                    return Results.Problem($"Variante {width}px não encontrada no S3.", statusCode: 409);
 
             media.MarkReady();
             await db.SaveChangesAsync(ct);

@@ -13,6 +13,7 @@ coverage/
 
 # Terraform
 .terraform/
+.build/
 *.tfstate
 *.tfstate.*
 *.tfvars

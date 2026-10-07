@@ -1,0 +1,49 @@
+name: deploy-api
+
+on:
+  push:
+    branches: [main, master]
+    paths: ["backend/**"]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # OIDC → AWS
+  contents: read
+
+concurrency: deploy-api
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: backend/global.json
+
+      - name: Testes
+        run: dotnet test Portfolio.slnx -c Release
+
+      - name: Empacotar Lambdas (linux-arm64)
+        run: |
+          dotnet publish src/Portfolio.Api -c Release -r linux-arm64 --self-contained false -o out/api
+          dotnet publish src/Portfolio.PublishDispatcher -c Release -r linux-arm64 --self-contained false -o out/dispatcher
+          (cd out/api && zip -qr ../api.zip .)
+          (cd out/dispatcher && zip -qr ../dispatcher.zip .)
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Atualizar código das Lambdas
+        run: |
+          aws lambda update-function-code --function-name "${{ vars.API_FUNCTION }}" --zip-file fileb://out/api.zip --publish > /dev/null
+          aws lambda update-function-code --function-name "${{ vars.DISPATCHER_FUNCTION }}" --zip-file fileb://out/dispatcher.zip --publish > /dev/null
+          aws lambda wait function-updated --function-name "${{ vars.API_FUNCTION }}"
+
+      - name: Smoke test
+        run: curl -fsS "${{ vars.API_URL }}/health"

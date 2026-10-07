@@ -3,5 +3,5 @@
 GET {{api}}/health
 
 ###
-# Em produção, as rotas /api/admin exigem o header Cf-Access-Jwt-Assertion (Cloudflare Access)
+# Em produção, /api/admin exige "Authorization: Bearer <access token do Cognito>" (validado pelo API Gateway)
 GET {{api}}/api/admin/categories

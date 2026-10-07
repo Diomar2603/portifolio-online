@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ApiService } from '../core/api/api.service';
+import { AuthService } from '../core/auth/auth.service';
 
 @Component({
   selector: 'adm-shell',
@@ -8,7 +9,8 @@ import { ApiService } from '../core/api/api.service';
   template: `
     <div class="flex min-h-screen">
       <aside class="w-60 shrink-0 border-r border-slate-200 bg-white p-4">
-        <p class="mb-6 font-semibold">Portfólio · Admin</p>
+        <p class="font-semibold">Portfólio · Admin</p>
+        <p class="mb-6 truncate text-xs text-slate-500">{{ auth.email() ?? 'modo local' }}</p>
         <nav class="flex flex-col gap-1 text-sm">
           @for (item of menu; track item.path) {
             <a [routerLink]="item.path" routerLinkActive="bg-slate-100 font-medium" class="rounded-lg px-3 py-2 hover:bg-slate-50">
@@ -16,6 +18,9 @@ import { ApiService } from '../core/api/api.service';
             </a>
           }
         </nav>
+        @if (auth.isAuthenticated()) {
+          <button type="button" (click)="auth.logout()" class="mt-6 px-3 text-sm text-slate-500 hover:text-slate-900">Sair</button>
+        }
       </aside>
       <main class="flex-1 p-8">
         <router-outlet />
@@ -33,6 +38,7 @@ import { ApiService } from '../core/api/api.service';
 })
 export class Shell {
   private readonly api = inject(ApiService);
+  protected readonly auth = inject(AuthService);
   protected readonly publishing = signal(false);
 
   protected readonly menu = [

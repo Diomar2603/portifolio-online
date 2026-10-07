@@ -1,0 +1,7 @@
+# Copie para terraform.tfvars (não versionado) e preencha.
+aws_region         = "us-east-1"
+domain_name        = "seudominio.dev"
+github_repository  = "seu-usuario/portifolio-online"
+admin_email        = "voce@exemplo.com"
+budget_email       = "voce@exemplo.com"
+monthly_budget_usd = 5

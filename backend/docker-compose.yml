@@ -1,4 +1,4 @@
-# Postgres local para desenvolvimento (em produção: Neon)
+# Postgres local para desenvolvimento (em produção: Aurora Serverless v2 PostgreSQL)
 services:
   postgres:
     image: postgres:17-alpine

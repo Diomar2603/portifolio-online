@@ -1,0 +1,51 @@
+name: deploy-admin
+
+on:
+  push:
+    branches: [main, master]
+    paths: ["frontend/projects/admin/**", "frontend/projects/shared/**"]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency: deploy-admin
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+
+      - name: Configurar ambiente (outputs do Terraform)
+        env:
+          API_URL: ${{ vars.API_URL }}
+          COGNITO_DOMAIN: ${{ vars.COGNITO_DOMAIN }}
+          COGNITO_CLIENT_ID: ${{ vars.COGNITO_CLIENT_ID }}
+        run: |
+          f=projects/admin/src/environments/environment.ts
+          sed -i "s|https://api.seudominio.dev|${API_URL}|; s|https://auth.seudominio.dev|${COGNITO_DOMAIN}|; s|PREENCHER_COM_OUTPUT_DO_TERRAFORM|${COGNITO_CLIENT_ID}|" "$f"
+          admin_host="https://admin.$(echo "$API_URL" | sed 's|https://api\.||')"
+          sed -i "s|https://admin.seudominio.dev|${admin_host}|g" "$f"
+
+      - run: npx ng build admin
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Publicar no S3 e invalidar CloudFront
+        run: |
+          aws s3 sync dist/admin/browser "s3://${{ vars.ADMIN_BUCKET }}" --delete
+          aws cloudfront create-invalidation --distribution-id "${{ vars.ADMIN_DISTRIBUTION_ID }}" --paths "/*" > /dev/null
